@@ -1,0 +1,8 @@
+dbt-core==1.10.13
+dbt-bigquery==1.10.2
+sqlfluff
+sqlfluff-templater-dbt
+dbt-colibri==0.2.7
+dagster
+dagster-webserver
+dagster-dbt

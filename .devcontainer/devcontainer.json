@@ -1,0 +1,29 @@
+// .devcontainer/devcontainer.json
+{
+    "name": "ships_container",
+    "dockerComposeFile": [
+        "../docker-compose.yml"
+    ],
+    "service": "dbt",
+    "workspaceFolder": "/app/",
+    // コンテナ起動後に実行されるコマンド (オプション)
+    "postCreateCommand": "dbt --version",
+    // 開発に必要な VS Code 拡張機能
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-python.python", // Python 開発用
+                "ms-python.vscode-pylance", // 高速な型チェック・補完
+                "innoverio.vscode-dbt-power-user", // dbt関連
+                "dorzey.vscode-sqlfluff", // SQL Lint
+                "HashiCorp.terraform", // SQLLFluff の設定などで HCL が使われる場合
+                "dagster.dagster" // Dagster 用
+            ]
+        }
+    },
+    // Dagster UI用のポート開放
+    "forwardPorts": [
+        3000
+    ],
+    "remoteUser": "root"
+}

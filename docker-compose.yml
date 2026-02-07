@@ -1,0 +1,16 @@
+# docker-compose.yml
+services:
+  dbt:
+    image: myrepo/dbt:latest
+    build:
+        context: .
+        dockerfile: Dockerfile
+    volumes:
+      - .:/app
+      - ~/.config/gcloud:/root/.config/gcloud:ro
+    environment:
+      - DBT_PROFILES_DIR=/app/dbt_project
+    working_dir: /app/dbt_project
+    tty: true
+    stdin_open: true
+    command: ["tail", "-f", "/dev/null"]
