@@ -1,0 +1,89 @@
+version: 2
+
+models:
+  - name: int_reservation_combined
+    description: 予約関連の結合モデル
+    columns:
+      - name: reservation_id
+        data_type: string
+        description: 予約ID
+
+      - name: detail_id
+        data_type: string
+        description: 予約詳細ID
+
+      - name: schedule_id
+        data_type: string
+        description: ダイヤID
+
+      - name: reservation_date
+        data_type: date
+        description: 予約日
+
+      - name: reservation_day_of_week
+        data_type: string
+        description: 予約曜日
+
+      - name: ship_id
+        data_type: string
+        description: 船ID
+
+      - name: ship_name
+        data_type: string
+        description: 船名
+
+      - name: departure_date
+        data_type: date
+        description: 出港日
+
+      - name: departure_day_of_week
+        data_type: string
+        description: 出港曜日
+
+      - name: arrival_date
+        data_type: date
+        description: 到着日
+      
+      - name: arrival_day_of_week
+        data_type: string
+        description: 到着曜日
+
+      - name: dep_port_name
+        data_type: string
+        description: 出発港
+
+      - name: arr_port_name
+        data_type: string
+        description: 到着港
+
+      - name: lead_time
+        data_type: int64
+        description: リードタイム（日数）
+
+      - name: passenger_id
+        data_type: string
+        description: 乗客ID
+
+      - name: is_member_flg
+        data_type: boolean
+        description: 会員フラグ
+
+      - name: reservation_name
+        data_type: string
+        description: 代表者氏名
+
+      - name: passenger_type
+        data_type: string
+        description: 乗客タイプ（大人・子供・幼児など）
+
+      - name: room_class_id
+        data_type: string
+        description: 部屋クラスID
+
+      - name: room_class_name
+        data_type: string
+        description: 部屋クラス名
+
+      - name: applied_fare
+        data_type: int64
+        description: 適用運賃

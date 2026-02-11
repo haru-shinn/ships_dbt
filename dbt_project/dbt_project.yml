@@ -15,6 +15,10 @@ clean-targets:
   - "dbt_packages"
   - "logs"
 
+seeds:
+  ships_pj:
+    +schema: seeds_master
+
 models:
   ships_pj:
     # ----------------------------------------

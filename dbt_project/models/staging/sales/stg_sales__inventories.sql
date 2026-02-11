@@ -6,7 +6,6 @@
 with source as (
   select
     trim(schedule_id) as schedule_id
-    , trim(section_id) as section_id
     , trim(room_class_id) as room_class_id
     , room_count
     , remaining_room_cnt

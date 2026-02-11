@@ -1,0 +1,9 @@
+room_class_id,room_class_name,fare,is_unit_rate,description
+SY,スイート(洋室),30000,true,1室固定（最大2名）
+SW,スイート(和室),60000,true,1室固定（最大4名）
+DX,デラックスシングル,9000,true,1室固定（1名）
+TR,ツーリング（寝台）,6500,true,1ユニット（1名用寝台）
+EC,エコノミー（雑魚寝）,4500,false,1名あたり料金
+FC,一等室,11000,true,1室固定（最大2名）
+SC,二等室,3800,false,1名あたり料金
+TC,三等室,2800,false,1名あたり料金

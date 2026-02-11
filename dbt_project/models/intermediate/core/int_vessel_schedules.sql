@@ -6,19 +6,28 @@
 }}
 with join_tbl as (
   select
+    -- スケジュール情報
     sch.schedule_id
     , ship.ship_id
     , ship.ship_name
-    , cast(sch.departure_time as date) as departure_date
+
+    -- 出発・到着情報
+    , departure_date
     , sch.departure_time
-    , format_date('%A', cast(sch.departure_time as date)) as departure_day_of_week
-    , cast(sch.arrival_time as date) as arrival_date
+    , departure_day_of_week
+    , arrival_date
     , sch.arrival_time
-    , format_date('%A', cast(sch.arrival_time as date)) as arrival_day_of_week
+    , arrival_day_of_week
+
+    -- 区間情報
     , sec.dep_section_seq
     , sec.arr_section_seq
+
+    -- 港情報
     , dep_port.port_name as dep_port_name
     , arr_port.port_name as arr_port_name
+
+    -- その他情報
     , sec.travel_time_minutes
   from
     {{ ref('stg_route_operations__schedules') }} as sch

@@ -7,7 +7,6 @@ with source as (
   select
     trim(reservation_id) as reservation_id
     , trim(detail_id) as detail_id
-    , trim(section_id) as section_id
     , trim(schedule_id) as schedule_id
     , trim(passenger_id) as passenger_id
     , passenger_type

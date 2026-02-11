@@ -77,12 +77,26 @@ models:
         data_type: string
         description: 到着港ID
 
+      - name: departure_date
+        data_type: date
+        description: 出発日
+
       - name: departure_time
         data_type: datetime
         description: 出発日時
+      
+      - name: departure_day_of_week
+        data_type: string
+        description: 出発曜日
+
+      - name: arrival_date
+        data_type: date
+        description: 到着日
 
       - name: arrival_time
         data_type: datetime
         description: 到着日時
-
-
+        
+      - name: arrival_day_of_week
+        data_type: string
+        description: 到着曜日

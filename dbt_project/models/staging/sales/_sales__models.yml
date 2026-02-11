@@ -19,6 +19,10 @@ models:
       - name: reservation_date
         data_type: date
         description: 予約日
+      
+      - name: reservation_day_of_week
+        data_type: string
+        description: 予約曜日
 
   - name: stg_sales__reservation_details
     description: 予約詳細情報テーブル
@@ -30,10 +34,6 @@ models:
       - name: detail_id
         data_type: string
         description: 予約詳細ID
-
-      - name: section_id
-        data_type: string
-        description: 区間ID
 
       - name: schedule_id
         data_type: string
@@ -69,11 +69,7 @@ models:
       - name: schedule_id
         data_type: string
         description: ダイヤID
-
-      - name: section_id
-        data_type: string
-        description: 区間ID
-
+        
       - name: room_class_id
         data_type: string
         description: クラスID

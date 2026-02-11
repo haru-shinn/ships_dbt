@@ -9,6 +9,7 @@ with source as (
     , reservation_name
     , reservation_email
     , reservation_date
+    , {{ to_day_of_week('reservation_date') }} as reservation_day_of_week
   from {{ source('sales_source', 'reservations') }}
 )
 select * from source
