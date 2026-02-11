@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: stg_sihp_management__ships
+  - name: stg_ship_management__ships
     description: 船マスタ（基本情報）テーブル
     columns:
       - name: ship_id
@@ -40,7 +40,7 @@ models:
         data_type: date
         description: 退役日
 
-  - name: stg_sihp_management__room_class_masters
+  - name: stg_ship_management__room_class_masters
     description: 客室クラス定義マスタテーブル
     columns:
       - name: room_class_id
@@ -59,7 +59,7 @@ models:
         data_type: string
         description: クラスの説明
 
-  - name: stg_sihp_management__ship_room_classes
+  - name: stg_ship_management__ship_room_classes
     description: 船別客室設定テーブル
     columns:
       - name: ship_id

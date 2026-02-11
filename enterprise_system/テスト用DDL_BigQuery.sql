@@ -91,42 +91,31 @@ INSERT INTO ships_raw_dev.ports VALUES
 DROP TABLE IF EXISTS ships_raw_dev.routes;
 CREATE TABLE IF NOT EXISTS ships_raw_dev.routes (
   route_id STRING
-  , departure_port_id STRING
-  , arrival_port_id STRING
+  , route_name STRING
+  , is_active BOOLEAN
 );
 
-INSERT INTO ships_raw_dev.routes (route_id, departure_port_id, arrival_port_id) VALUES
- ('R1', 'P1', 'P2'), ('R2', 'P1', 'P3')
+INSERT INTO ships_raw_dev.routes (route_id, route_name, is_active) VALUES
+ ('R1', 'ABC-XYZ航路', TRUE), ('R2', 'ABC-PQL航路', TRUE)
 ;
 
 
 /* 区間テーブル */
 DROP TABLE IF EXISTS ships_raw_dev.sections;
 CREATE TABLE IF NOT EXISTS ships_raw_dev.sections (
-  section_id STRING
+  route_id STRING
+  , dep_section_seq INT64
+  , arr_section_seq INT64
   , departure_port_id STRING
   , arrival_port_id STRING
   , travel_time_minutes INT64
-)
-;
-
-INSERT INTO ships_raw_dev.sections (section_id, departure_port_id, arrival_port_id, travel_time_minutes) VALUES
- ('S1', 'P1', 'P2', 195) -- ABC->XYZ (3h15m)
- ,('S2', 'P2', 'P1', 195) -- XYZ->ABC
- ,('S3', 'P1', 'P3', 100) -- ABC->PQL (1h40m)
- ,('S4', 'P3', 'P1', 100) -- PQL->ABC
-;
-
-
-/* 航路区間構成テーブル */
-DROP TABLE IF EXISTS ships_raw_dev.route_sections;
-CREATE TABLE IF NOT EXISTS ships_raw_dev.route_sections (
-  section_id STRING
-  , route_id STRING
 );
 
-INSERT INTO ships_raw_dev.route_sections (section_id, route_id) VALUES
-('S1', 'R1'), ('S2', 'R1'), ('S3', 'R2'), ('S4', 'R2')
+INSERT INTO ships_raw_dev.sections (route_id, dep_section_seq, arr_section_seq, departure_port_id, arrival_port_id, travel_time_minutes) VALUES
+ ('R1', 1, 2, 'P1', 'P2', 195) -- ABC->XYZ (3h15m)
+ ,('R1', 1, 2, 'P2', 'P1', 195) -- XYZ->ABC
+ ,('R2', 1, 2, 'P1', 'P3', 100) -- ABC->PQL (1h40m)
+ ,('R2', 1, 2, 'P3', 'P1', 100) -- PQL->ABC
 ;
 
 
@@ -134,62 +123,64 @@ INSERT INTO ships_raw_dev.route_sections (section_id, route_id) VALUES
 DROP TABLE IF EXISTS ships_raw_dev.schedules;
 CREATE TABLE IF NOT EXISTS ships_raw_dev.schedules (
   schedule_id STRING
+  , ship_id STRING
   , route_id STRING
-  , section_id STRING
+  , departure_port_id STRING
+  , arrival_port_id STRING
   , departure_time DATETIME
   , arrival_time DATETIME
-  , ship_id STRING
 );
 
 DELETE FROM ships_raw_dev.schedules WHERE TRUE;
 INSERT INTO ships_raw_dev.schedules (
-    schedule_id, ship_id, route_id, section_id, departure_time, arrival_time
+    schedule_id, ship_id, route_id, departure_port_id, arrival_port_id, departure_time, arrival_time
 )
 WITH date_range AS (
   SELECT day FROM UNNEST(GENERATE_DATE_ARRAY('2026-02-01', '2026-02-28')) day
 )
 , base_timetable AS (
   -- R1航路 (AppleMaru)
-  SELECT 'S001' AS s_id, 'R1' AS r_id, 'S1' AS sec, '080000' AS d_t, '111500' AS a_t UNION ALL
-  SELECT 'S001' AS s_id, 'R1' AS r_id, 'S2' AS sec, '131500' AS d_t, '163000' AS a_t UNION ALL
-  SELECT 'S001' AS s_id, 'R1' AS r_id, 'S1' AS sec, '183000' AS d_t, '214500' AS a_t UNION ALL
-  SELECT 'S001' AS s_id, 'R1' AS r_id, 'S2' AS sec, '234500' AS d_t, '030000' AS a_t UNION ALL
+  SELECT 'S001' AS ship_id, 'R1' AS  route_id, 'P1' AS departure_port_id, 'P2' AS arrival_port_id, '080000' AS  dep_time, '111500' AS  arr_time UNION ALL
+  SELECT 'S001' AS ship_id, 'R1' AS  route_id, 'P2' AS departure_port_id, 'P1' AS arrival_port_id, '131500' AS  dep_time, '163000' AS  arr_time UNION ALL
+  SELECT 'S001' AS ship_id, 'R1' AS  route_id, 'P1' AS departure_port_id, 'P2' AS arrival_port_id, '183000' AS  dep_time, '214500' AS  arr_time UNION ALL
+  SELECT 'S001' AS ship_id, 'R1' AS  route_id, 'P2' AS departure_port_id, 'P1' AS arrival_port_id, '234500' AS  dep_time, '030000' AS  arr_time UNION ALL
 
   -- R1航路 (BananaMaru)
-  SELECT 'S002' AS s_id, 'R1' AS r_id, 'S2' AS sec, '080000' AS d_t, '111500' AS a_t UNION ALL
-  SELECT 'S002' AS s_id, 'R1' AS r_id, 'S1' AS sec, '131500' AS d_t, '163000' AS a_t UNION ALL
-  SELECT 'S002' AS s_id, 'R1' AS r_id, 'S2' AS sec, '183000' AS d_t, '214500' AS a_t UNION ALL
-  SELECT 'S002' AS s_id, 'R1' AS r_id, 'S1' AS sec, '234500' AS d_t, '030000' AS a_t UNION ALL
+  SELECT 'S002' AS ship_id, 'R1' AS  route_id, 'P2' AS departure_port_id, 'P1' AS arrival_port_id, '080000' AS  dep_time, '111500' AS  arr_time UNION ALL
+  SELECT 'S002' AS ship_id, 'R1' AS  route_id, 'P1' AS departure_port_id, 'P2' AS arrival_port_id, '131500' AS  dep_time, '163000' AS  arr_time UNION ALL
+  SELECT 'S002' AS ship_id, 'R1' AS  route_id, 'P2' AS departure_port_id, 'P1' AS arrival_port_id, '183000' AS  dep_time, '214500' AS  arr_time UNION ALL
+  SELECT 'S002' AS ship_id, 'R1' AS  route_id, 'P1' AS departure_port_id, 'P2' AS arrival_port_id, '234500' AS  dep_time, '030000' AS  arr_time UNION ALL
 
   -- R2航路 (OrangeMaru)
-  SELECT 'S003' AS s_id, 'R2' AS r_id, 'S3' AS sec, '070000' AS d_t, '084000' AS a_t UNION ALL
-  SELECT 'S003' AS s_id, 'R2' AS r_id, 'S4' AS sec, '092000' AS d_t, '110000' AS a_t UNION ALL
-  SELECT 'S003' AS s_id, 'R2' AS r_id, 'S3' AS sec, '114000' AS d_t, '132000' AS a_t UNION ALL
-  SELECT 'S003' AS s_id, 'R2' AS r_id, 'S4' AS sec, '140000' AS d_t, '154000' AS a_t UNION ALL
-  SELECT 'S003' AS s_id, 'R2' AS r_id, 'S3' AS sec, '162000' AS d_t, '180000' AS a_t UNION ALL
-  SELECT 'S003' AS s_id, 'R2' AS r_id, 'S4' AS sec, '184000' AS d_t, '202000' AS a_t UNION ALL
-  SELECT 'S003' AS s_id, 'R2' AS r_id, 'S3' AS sec, '210000' AS d_t, '224000' AS a_t UNION ALL
-  SELECT 'S003' AS s_id, 'R2' AS r_id, 'S4' AS sec, '232000' AS d_t, '010000' AS a_t UNION ALL
+  SELECT 'S003' AS ship_id, 'R2' AS  route_id, 'P1' AS departure_port_id, 'P3' AS arrival_port_id, '070000' AS  dep_time, '084000' AS  arr_time UNION ALL
+  SELECT 'S003' AS ship_id, 'R2' AS  route_id, 'P3' AS departure_port_id, 'P1' AS arrival_port_id, '092000' AS  dep_time, '110000' AS  arr_time UNION ALL
+  SELECT 'S003' AS ship_id, 'R2' AS  route_id, 'P1' AS departure_port_id, 'P3' AS arrival_port_id, '114000' AS  dep_time, '132000' AS  arr_time UNION ALL
+  SELECT 'S003' AS ship_id, 'R2' AS  route_id, 'P3' AS departure_port_id, 'P1' AS arrival_port_id, '140000' AS  dep_time, '154000' AS  arr_time UNION ALL
+  SELECT 'S003' AS ship_id, 'R2' AS  route_id, 'P1' AS departure_port_id, 'P3' AS arrival_port_id, '162000' AS  dep_time, '180000' AS  arr_time UNION ALL
+  SELECT 'S003' AS ship_id, 'R2' AS  route_id, 'P3' AS departure_port_id, 'P1' AS arrival_port_id, '184000' AS  dep_time, '202000' AS  arr_time UNION ALL
+  SELECT 'S003' AS ship_id, 'R2' AS  route_id, 'P1' AS departure_port_id, 'P3' AS arrival_port_id, '210000' AS  dep_time, '224000' AS  arr_time UNION ALL
+  SELECT 'S003' AS ship_id, 'R2' AS  route_id, 'P3' AS departure_port_id, 'P1' AS arrival_port_id, '232000' AS  dep_time, '010000' AS  arr_time UNION ALL
 
   -- R2航路 (GrapeMaru)
-  SELECT 'S004' AS s_id, 'R2' AS r_id, 'S4' AS sec, '070000' AS d_t, '084000' AS a_t UNION ALL
-  SELECT 'S004' AS s_id, 'R2' AS r_id, 'S3' AS sec, '092000' AS d_t, '110000' AS a_t UNION ALL
-  SELECT 'S004' AS s_id, 'R2' AS r_id, 'S4' AS sec, '114000' AS d_t, '132000' AS a_t UNION ALL
-  SELECT 'S004' AS s_id, 'R2' AS r_id, 'S3' AS sec, '140000' AS d_t, '154000' AS a_t UNION ALL
-  SELECT 'S004' AS s_id, 'R2' AS r_id, 'S4' AS sec, '162000' AS d_t, '180000' AS a_t UNION ALL
-  SELECT 'S004' AS s_id, 'R2' AS r_id, 'S3' AS sec, '184000' AS d_t, '202000' AS a_t UNION ALL
-  SELECT 'S004' AS s_id, 'R2' AS r_id, 'S4' AS sec, '210000' AS d_t, '224000' AS a_t UNION ALL
-  SELECT 'S004' AS s_id, 'R2' AS r_id, 'S3' AS sec, '232000' AS d_t, '010000' AS a_t
+  SELECT 'S004' AS ship_id, 'R2' AS  route_id, 'P3' AS departure_port_id, 'P1' AS arrival_port_id, '070000' AS  dep_time, '084000' AS  arr_time UNION ALL
+  SELECT 'S004' AS ship_id, 'R2' AS  route_id, 'P1' AS departure_port_id, 'P3' AS arrival_port_id, '092000' AS  dep_time, '110000' AS  arr_time UNION ALL
+  SELECT 'S004' AS ship_id, 'R2' AS  route_id, 'P3' AS departure_port_id, 'P1' AS arrival_port_id, '114000' AS  dep_time, '132000' AS  arr_time UNION ALL
+  SELECT 'S004' AS ship_id, 'R2' AS  route_id, 'P1' AS departure_port_id, 'P3' AS arrival_port_id, '140000' AS  dep_time, '154000' AS  arr_time UNION ALL
+  SELECT 'S004' AS ship_id, 'R2' AS  route_id, 'P3' AS departure_port_id, 'P1' AS arrival_port_id, '162000' AS  dep_time, '180000' AS  arr_time UNION ALL
+  SELECT 'S004' AS ship_id, 'R2' AS  route_id, 'P1' AS departure_port_id, 'P3' AS arrival_port_id, '184000' AS  dep_time, '202000' AS  arr_time UNION ALL
+  SELECT 'S004' AS ship_id, 'R2' AS  route_id, 'P3' AS departure_port_id, 'P1' AS arrival_port_id, '210000' AS  dep_time, '224000' AS  arr_time UNION ALL
+  SELECT 'S004' AS ship_id, 'R2' AS  route_id, 'P1' AS departure_port_id, 'P3' AS arrival_port_id, '232000' AS  dep_time, '010000' AS  arr_time
 )
 SELECT 
-  FORMAT_DATE('%Y%m%d', day) || s_id || sec || SUBSTR(d_t, 1, 2) AS schedule_id
-  , s_id AS ship_id
-  , r_id AS route_id
-  , sec AS section_id
-  , PARSE_DATETIME("%Y%m%d%H%M%S", FORMAT_DATE('%Y%m%d', day) || d_t) AS departure_time
-  , IF(a_t < d_t
-      , PARSE_DATETIME("%Y%m%d%H%M%S", FORMAT_DATE('%Y%m%d', DATE_ADD(day, INTERVAL 1 DAY)) || a_t)
-      , PARSE_DATETIME("%Y%m%d%H%M%S", FORMAT_DATE('%Y%m%d', day) || a_t)
+  FORMAT_DATE('%Y%m%d', day) || ship_id || SUBSTR(dep_time, 1, 2) AS schedule_id
+  , ship_id
+  , route_id
+  , departure_port_id
+  , arrival_port_id
+  , PARSE_DATETIME("%Y%m%d%H%M%S", FORMAT_DATE('%Y%m%d', day) || dep_time) AS departure_time
+  , IF(arr_time < dep_time
+      , PARSE_DATETIME("%Y%m%d%H%M%S", FORMAT_DATE('%Y%m%d', DATE_ADD(day, INTERVAL 1 DAY)) ||  arr_time)
+      , PARSE_DATETIME("%Y%m%d%H%M%S", FORMAT_DATE('%Y%m%d', day) ||  arr_time)
     ) AS arrival_time
 FROM date_range CROSS JOIN base_timetable
 ;

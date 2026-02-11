@@ -29,3 +29,14 @@ models:
       sales:
         +schema: stg_sales
 
+    # ----------------------------------------
+    # intermediate層のモデル設定
+    # ----------------------------------------
+    intermediate:
+      +materialized: table
+      core:
+        +schema: int_core
+      sales:
+        +schema: int_sales
+      inventory:
+        +schema: int_inventory

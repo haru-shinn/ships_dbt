@@ -147,7 +147,7 @@ graph TB
 
 ## 詳細データ
 
-### 船マスタ（基本情報）テーブル
+### 船（基本情報）
 
 - 船：4隻（AppleMaru, BananaMaru, OrangeMaru, GrapeMaru）
 
@@ -191,21 +191,11 @@ graph TB
 |TC|三等室|40名|12室|480名|
 |計||||540名|
 
-### 航路と区間
+### 航路
 
-- 航路(routes)テーブル
+- 航路(routes)
   - ABC港 ↔ XYZ港: R1
   - ABC港 ↔ PQL港: R2
-
-- 区間(sections)テーブル
-  - ABC港 → XYZ港：S1
-  - XYZ港 → ABC港：S2
-  - ABC港 → PQL港：S3
-  - PQL港 → BC港：S4
-
-- 航路区間構成(route_sections)テーブル
-  - R1はS1, S2
-  - R2はS3, S4
 
 ### ダイヤ
 
@@ -265,7 +255,6 @@ graph TB
     - stg_ports (港テーブル)
     - stg_routes（航路テーブル）
     - stg_sections（区間テーブル）
-    - stg_route_sections（航路区間構成テーブル）
     - stg_schedules (運航ダイヤテーブル)
   - トランザクション系テーブル（予約・在庫）
     - stg_reservations（予約基本情報テーブル）

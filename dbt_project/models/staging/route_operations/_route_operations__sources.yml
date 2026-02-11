@@ -34,25 +34,32 @@ sources:
               - unique
               - not_null
             description: 航路ID
-          - name: departure_port_id
+          - name: route_name
             tests:
               - not_null
-            description: 出発港ID
-          - name: arrival_port_id
+            description: 航路名
+          - name: is_active
             tests:
               - not_null
-            description: 到着港ID
+            description: 有効フラグ
 
       - name: sections
         meta:
           owner: harushin
         description: 区間テーブル
         columns:
-          - name: section_id
+          - name: route_id
             tests:
-              - unique
               - not_null
-            description: 区間ID
+            description: 航路ID
+          - name: dep_section_seq
+            tests:
+              - not_null
+            description: 出発区間順序
+          - name: arr_section_seq
+            tests:
+              - not_null
+            description: 到着区間順序
           - name: departure_port_id
             tests:
               - not_null
@@ -64,20 +71,6 @@ sources:
           - name: travel_time_minutes
             description: 所要時間（分）
 
-      - name: route_sections
-        meta:
-          owner: harushin
-        description: 航路区間構成テーブル
-        columns:
-          - name: section_id
-            tests:
-              - not_null
-            description: 区間ID
-          - name: route_id
-            tests:
-              - not_null
-            description: 航路ID
-
       - name: schedules
         meta:
           owner: harushin
@@ -88,14 +81,22 @@ sources:
               - unique
               - not_null
             description: ダイヤID
+          - name: ship_id
+            tests:
+              - not_null
+            description: 船ID
           - name: route_id
             tests:
               - not_null
             description: 航路ID
-          - name: section_id
+          - name: departure_port_id
             tests:
               - not_null
-            description: 区間ID
+            description: 出発港ID
+          - name: arrival_port_id
+            tests:
+              - not_null
+            description: 到着港ID
           - name: departure_time
             tests:
               - not_null
@@ -104,7 +105,3 @@ sources:
             tests:
               - not_null
             description: 到着日時
-          - name: ship_id
-            tests:
-              - not_null
-            description: 船ID

@@ -19,20 +19,28 @@ models:
         data_type: string
         description: 航路ID
 
-      - name: departure_port_id
+      - name: route_name
         data_type: string
-        description: 出発港ID
+        description: 航路名
 
-      - name: arrival_port_id
-        data_type: string
-        description: 到着港ID
+      - name: is_active
+        data_type: boolean
+        description: 有効フラグ
 
   - name: stg_route_operations__sections
     description: 区間テーブル
     columns:
-      - name: section_id
+      - name: route_id
         data_type: string
-        description: 区間ID
+        description: 航路ID
+
+      - name: dep_section_seq
+        data_type: int64
+        description: 出発区間順序
+      
+      - name: arr_section_seq
+        data_type: int64
+        description: 到着区間順序
 
       - name: departure_port_id
         data_type: string
@@ -46,17 +54,6 @@ models:
         data_type: int64
         description: 所要時間（分）
 
-  - name: stg_route_operations__route_sections
-    description: 航路区間構成テーブル
-    columns:
-      - name: section_id
-        data_type: string
-        description: 区間ID
-
-      - name: route_id
-        data_type: string
-        description: 航路ID
-
   - name: stg_route_operations__schedules
     description: 運行スケジュールテーブル
     columns:
@@ -64,13 +61,21 @@ models:
         data_type: string
         description: ダイヤID
 
+      - name: ship_id
+        data_type: string
+        description: 船ID
+
       - name: route_id
         data_type: string
         description: 航路ID
 
-      - name: section_id
+      - name: departure_port_id
         data_type: string
-        description: 区間ID
+        description: 出発港ID
+
+      - name: arrival_port_id
+        data_type: string
+        description: 到着港ID
 
       - name: departure_time
         data_type: datetime
@@ -80,6 +85,4 @@ models:
         data_type: datetime
         description: 到着日時
 
-      - name: ship_id
-        data_type: string
-        description: 船ID
+
