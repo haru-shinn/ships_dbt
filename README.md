@@ -250,13 +250,13 @@ graph TB
 ### Intermediate層(int_)
 
 - 複数のマスタを結合したり、複雑な計算ロジックを共通部品として定義するレイヤー
-- int_vessel_schedules: 
+- int_vessel_schedules:
   - stg_schedules に ships, sections, routes, ports を結合。
   - 目的: 「いつ、どの船が、どこからどこへ行くか」という情報を1つのワイドなテーブルにし、後の集計を楽にする。
-- int_reservation_combined: 
+- int_reservation_combined:
   - stg_reservations と stg_reservation_details を結合。
   - 目的: 予約者情報と明細（乗客ごと）を紐付け。ここで reservation_date と departure_date の差分を計算し、**「予約リードタイム」**を算出する。
-- int_daily_inventory_metrics: 
+- int_daily_inventory_metrics:
   - stg_inventory をベースに、在庫消化率などを計算。
 
 ### Mart層(fct_/dim_)
@@ -287,15 +287,7 @@ graph TB
 ```bash
 ~/ship-pj/
 ├── .devcontainer/      # 開発環境（VS Code設定）
-├── .github/             # GitHub Actions
-│   └── workflows/
-│       ├── ci.yml       # テスト自動化（dbt test, dagster check）
-│       └── cd.yml       # デプロイ自動化（Docker build & push, Terraform apply）
-├── terraform/           # インフラ管理（Google Cloudのリソース定義）
-│   ├── main.tf
-│   ├── variables.tf
-│   └── bigquery.tf      # データ基盤の定義
-├── dbt_project/         # dbt（データ変換ロジック）
+├── dbt_models/         # dbt（データ変換ロジック）
 ├── dagster_project/     # Dagster（オーケストレーション）
 ├── Dockerfile           # 本番用イメージ（Dagster + dbt）
 ├── docker-compose.yml   # ローカル実行用

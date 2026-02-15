@@ -17,7 +17,9 @@
                 "innoverio.vscode-dbt-power-user", // dbt関連
                 "dorzey.vscode-sqlfluff", // SQL Lint
                 "hashicorp.terraform", // Terraform公式拡張
-                "dagster.dagster" // Dagster 用
+                "dagster.dagster", // Dagster 用
+                "davidanson.vscode-markdownlint", // Markdown Lint
+                "yzhang.markdown-all-in-one" // Markdown 編集支援
             ]
         }
     },

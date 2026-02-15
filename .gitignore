@@ -16,38 +16,34 @@ __pycache__/
 # dbt関連の除外
 # -------------------------
 # dbtの実行結果、ログ、コンパイル済みSQLなどが格納されるフォルダ
-/dbt_project/target/
-/dbt_project/logs/
-/dbt_project/dbt_packages/
-/dbt_project/dev/
+/dbt_models/target/
+/dbt_models/logs/
+/dbt_models/dbt_packages/
+/dbt_models/dev/
 
 # dbtの環境設定ファイル（機密情報を含む可能性があるため）
-/dbt_project/profiles.yml 
-/dbt_project/.user.yml
+/dbt_models/profiles.yml 
+/dbt_models/.user.yml
 
 # -------------------------
 # dagsterの除外
 # -------------------------
 # dagsterの実行結果やログが格納されるフォルダ
 /dagster_pj/.tmp*/
+/dagster_pj/dagster_home/
 
 # -------------------------
-# infrastructure配下の不要なフォルダ・ファイルの除外
+# duckdb配下の不要なフォルダ・ファイルの除外
 # -------------------------
-/infrastructure/.terraform/
-/infrastructure/generated/
-/infrastructure/*.tfstate
-/infrastructure/*.tfstate.*
-/infrastructure/terraform.tfstate.d/
+/duckdb_database/
 
 # -------------------------
 # ドキュメント関連の除外
 # -------------------------
-/docs/開発本番反映手順.md
+
 
 # -------------------------
 # その他の除外
 # -------------------------
 # システム固有のファイル
 .env
-.gcp/*

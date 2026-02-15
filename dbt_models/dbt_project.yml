@@ -1,7 +1,7 @@
 name: 'ships_pj'
 version: '1.0.0'
 
-profile: 'dbt_project'
+profile: 'ships_models'
 
 model-paths: ["models"]
 analysis-paths: ["analyses"]
