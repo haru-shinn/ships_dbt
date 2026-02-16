@@ -1,8 +1,8 @@
 dbt-core==1.11.5
 dbt-duckdb==1.10.0
+dbt-colibri==0.2.7
 sqlfluff
 sqlfluff-templater-dbt
-dbt-colibri==0.2.7
 dagster
 dagster-webserver
 dagster-dbt

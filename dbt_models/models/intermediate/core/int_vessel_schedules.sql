@@ -31,7 +31,7 @@ with join_tbl as (
     , sec.travel_time_minutes
 
     -- メタデータ
-    , current_timestamp() as updated_at
+    , {{ current_timestamp() }} as updated_at
   from
     {{ ref('stg_route_operations__schedules') }} as sch
     inner join {{ ref('stg_route_operations__sections') }} as sec

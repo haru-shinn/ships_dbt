@@ -23,7 +23,7 @@ with joined_tbl as (
     , ves_sch.arr_port_name
 
     -- リードタイム情報
-    , date_diff(sch.departure_date, res.reservation_date, DAY) as lead_time
+    , {{ date_diff('sch.departure_date', 'res.reservation_date', 'DAY') }} as lead_time
 
     -- 顧客属性
     , res_d.passenger_id
@@ -37,7 +37,7 @@ with joined_tbl as (
     , res_d.applied_fare
 
     -- メタデータ
-    , current_timestamp() as updated_at
+    , {{ current_timestamp() }} as updated_at
   from
     {{ ref('stg_sales__reservations') }} as res
     inner join {{ ref('stg_sales__reservation_details') }} as res_d

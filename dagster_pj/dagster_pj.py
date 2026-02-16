@@ -4,11 +4,11 @@ from dagster import Definitions, asset
 from dagster_dbt import DbtCliResource, dbt_assets
 
 
-# プロジェクトルートからの dbt_project へのパス
-DBT_PROJECT_DIR = Path(__file__).joinpath("..", "..", "dbt_project").resolve()
+# プロジェクトルートからの dbt_models へのパス
+DBT_MODELS_DIR = Path(__file__).joinpath("..", "..", "dbt_models").resolve()
 
 # dbtをアセットとして定義
-@dbt_assets(manifest=DBT_PROJECT_DIR / "target/manifest.json")
+@dbt_assets(manifest=DBT_MODELS_DIR / "target/manifest.json")
 def my_dbt_assets(context, dbt: DbtCliResource):
     yield from dbt.cli(["run"], context=context).stream()
 
@@ -21,6 +21,6 @@ def simple_python_asset():
 defs = Definitions(
     assets=[my_dbt_assets, simple_python_asset],
     resources={
-        "dbt": DbtCliResource(project_dir=os.fspath(DBT_PROJECT_DIR)),
+        "dbt": DbtCliResource(project_dir=os.fspath(DBT_MODELS_DIR)),
     },
 )

@@ -8,10 +8,13 @@ services:
         target: development
     volumes:
       - .:/app
-      - ~/.config/gcloud:/root/.config/gcloud:ro
+      - ./.duckdb_database:/app/.duckdb_database
+      - duckdb_extensions:/root/.duckdb
     environment:
-      - DBT_PROFILES_DIR=/app/dbt_project
-    working_dir: /app/dbt_project
+      - DBT_PROFILES_DIR=/app/dbt_models
+    working_dir: /app/dbt_models
     tty: true
     stdin_open: true
     command: ["tail", "-f", "/dev/null"]
+volumes:
+  duckdb_extensions:

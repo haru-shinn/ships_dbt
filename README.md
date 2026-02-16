@@ -305,7 +305,7 @@ graph TD
 
     subgraph Docker_Orchestration [Docker Layer]
         B -- "② イメージをビルド" --> C[Dockerfile]
-        B -- "⑤ ホスト側のファイルを共有" --> F[(Host Folders<br/>'dbt_project / .config')]
+        B -- "⑤ ホスト側のファイルを共有" --> F[(Host Folders<br/>'dbt_models / .config')]
     end
 
     subgraph Container_Runtime [Running Container]
