@@ -9,4 +9,5 @@ with source as (
     , port_name
   from {{ source('route_operations_source', 'ports') }}
 )
+
 select * from source

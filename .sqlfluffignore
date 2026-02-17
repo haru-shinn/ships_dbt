@@ -1,0 +1,3 @@
+/dbt_models/dbt_packages/
+/dbt_models/macros/
+/dbt_models/target/

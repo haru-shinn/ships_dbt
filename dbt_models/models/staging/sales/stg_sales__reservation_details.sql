@@ -14,11 +14,12 @@ with source as (
         when passenger_type = 'ADULT' then '2'
         when passenger_type = 'CHILD' then '1'
         when passenger_type = 'INFANT' then '0'
-        else '99' 
+        else '99'
       end as passenger_type_code
     , trim(ship_id) as ship_id
     , trim(room_class_id) as room_class_id
     , cast(applied_fare as int64) as applied_fare
   from {{ source('sales_source', 'reservation_details') }}
 )
+
 select * from source

@@ -2,16 +2,21 @@
 dialect = duckdb
 templater = dbt
 max_line_length = 120
+exclude_rules = ST06, LT02
 
 [sqlfluff:templater:dbt]
-project_dir = .
+project_dir = ./dbt_models
 
 [sqlfluff:indentation]
-indented_joins = False
-template_blocks_indent = True
+indent_unit = space
+tab_space_size = 2
+template_blocks_indent = False
 
 [sqlfluff:layout:type:comma]
 line_position = leading
+
+[sqlfluff:layout:type:alias_expression]
+spacing_before = align
 
 [sqlfluff:rules:capitalisation.keywords]
 capitalisation_policy = lower
@@ -21,3 +26,12 @@ aliasing_iso = explicit
 
 [sqlfluff:rules:aliasing.column]
 aliasing_iso = explicit
+
+[sqlfluff:rules:layout.indent]
+indented_from_joins = False
+indented_joins = False
+indented_on_contents = False
+indented_ctes = False
+indented_then = False
+implicit_indents = allow
+indent_across_no_joins = False

@@ -13,4 +13,5 @@ with source as (
     , travel_time_minutes
   from {{ source('route_operations_source', 'sections') }}
 )
+
 select * from source

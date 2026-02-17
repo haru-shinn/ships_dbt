@@ -19,4 +19,5 @@ with source as (
 
   from {{ source('route_operations_source', 'schedules') }}
 )
+
 select * from source

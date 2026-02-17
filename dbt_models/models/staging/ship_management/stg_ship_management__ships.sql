@@ -16,4 +16,5 @@ with source as (
     , end_date
   from {{ source('ship_management_source', 'ships') }}
 )
+
 select * from source

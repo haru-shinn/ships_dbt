@@ -12,4 +12,5 @@ with source as (
     , total_occupancy
   from {{ source('ship_management_source', 'ship_room_classes') }}
 )
+
 select * from source

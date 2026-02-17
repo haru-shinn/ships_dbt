@@ -10,4 +10,5 @@ with source as (
     , is_active
   from {{ source('route_operations_source', 'routes') }}
 )
+
 select * from source

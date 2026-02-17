@@ -40,13 +40,14 @@ with joined_tbl as (
     , {{ current_timestamp() }} as updated_at
   from
     {{ ref('stg_sales__reservations') }} as res
-    inner join {{ ref('stg_sales__reservation_details') }} as res_d
-      on res.reservation_id = res_d.reservation_id
-    inner join {{ ref('stg_route_operations__schedules') }} as sch
-      on res_d.schedule_id = sch.schedule_id
-    inner join {{ ref('int_vessel_schedules') }} as ves_sch
-      on res_d.schedule_id = ves_sch.schedule_id
-    inner join {{ ref('stg_ship_management__room_class_masters') }} as rcm
-      on res_d.room_class_id = rcm.room_class_id
+  inner join {{ ref('stg_sales__reservation_details') }} as res_d
+    on res.reservation_id = res_d.reservation_id
+  inner join {{ ref('stg_route_operations__schedules') }} as sch
+    on res_d.schedule_id = sch.schedule_id
+  inner join {{ ref('int_vessel_schedules') }} as ves_sch
+    on res_d.schedule_id = ves_sch.schedule_id
+  inner join {{ ref('stg_ship_management__room_class_masters') }} as rcm
+    on res_d.room_class_id = rcm.room_class_id
 )
+
 select * from joined_tbl

@@ -13,4 +13,5 @@ with source as (
     , remaining_num_of_people
   from {{ source('sales_source', 'inventories') }}
 )
+
 select * from source

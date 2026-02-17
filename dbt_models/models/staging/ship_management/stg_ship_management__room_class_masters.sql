@@ -11,4 +11,5 @@ with source as (
     , description
   from {{ source('ship_management_source', 'room_class_masters') }}
 )
+
 select * from source

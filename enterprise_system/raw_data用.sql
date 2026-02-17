@@ -8,6 +8,7 @@
 
 /* スキーマの作成 */
 CREATE SCHEMA IF NOT EXISTS ships_raw_dev;
+select aa from bbb;
 
 /* マスタ系テーブル（船・客室関連） */
 
