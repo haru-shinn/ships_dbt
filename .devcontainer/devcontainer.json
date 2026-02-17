@@ -14,7 +14,7 @@
             "extensions": [
                 "ms-python.python", // Python 開発用
                 "ms-python.vscode-pylance", // 高速な型チェック・補完
-                "innoverio.vscode-dbt-power-user", // dbt関連
+                // "innoverio.vscode-dbt-power-user", // dbt関連
                 // "sqlfluff.vscode-sqlfluff", // SQL Lint
                 // "dagster.dagster", // Dagster 用
                 "davidanson.vscode-markdownlint", // Markdown Lint
