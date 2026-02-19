@@ -35,9 +35,8 @@ sources:
           owner: harushin
         description: 予約詳細情報テーブル
         columns:
-          - name: reservation__id
+          - name: reservation_id
             tests:
-              - unique
               - not_null
             description: 予約ID
           - name: detail_id

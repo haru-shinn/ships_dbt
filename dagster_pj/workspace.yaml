@@ -1,2 +1,4 @@
 load_from:
-  - python_file: dagster_pj.py
+- python_file: 
+      relative_path: "dagster_pj.py"
+      working_directory: ".."

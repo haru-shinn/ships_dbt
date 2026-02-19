@@ -1,12 +1,20 @@
-dbt-core==1.11.5
-dbt-duckdb==1.10.0
-dbt-colibri==0.2.7
-sqlfluff
-sqlfluff-templater-dbt
-dagster
-dagster-webserver
-dagster-dbt
-dagster-duckdb
-dagster-duckdb-pandas
-pandas
-pyarrow
+# --- データ変換・モデリング (dbt) ---
+dbt-core==1.11.5            # dbt本体
+dbt-duckdb==1.10.0          # dbtからDuckDBに接続するためのアダプター
+dbt-colibri==0.2.7          # dbtプロジェクトから列レベルのリネージを抽出・可視化
+
+# --- SQL品質管理 (Lint/Formatting) ---
+sqlfluff                    # SQLの自動整形・エラーチェック
+sqlfluff-templater-dbt      # sqlfluffをdbtプロジェクトに対応させるプラグイン
+
+# --- オーケストレーション (Dagster) ---
+dagster                     # ワークフロー管理の本体
+dagster-webserver           # 管理画面（GUI）を提供
+dagster-dbt                 # Dagsterとdbtを連携させるプラグイン
+dagster-duckdb              # DagsterからDuckDBを操作するプラグイン
+dagster-duckdb-pandas       # DuckDBのデータをPandasとして扱うためのプラグイン
+dagster-dg-cli              # Dagster CLI
+
+# --- データ操作・基盤 ---
+pandas                      # データ分析・加工用ライブラリ
+pyarrow                     # 高速なデータ処理・ストレージ用

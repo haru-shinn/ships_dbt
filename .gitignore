@@ -20,6 +20,7 @@ __pycache__/
 /dbt_models/logs/
 /dbt_models/dbt_packages/
 /dbt_models/dev/
+/dbt_models/dist/
 
 # dbtの環境設定ファイル（機密情報を含む可能性があるため）
 /dbt_models/profiles.yml 

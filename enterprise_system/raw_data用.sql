@@ -139,7 +139,8 @@ INSERT INTO ships_raw_dev.schedules (
     schedule_id, ship_id, route_id, departure_port_id, arrival_port_id, departure_time, arrival_time
 )
 WITH date_range AS (
-  SELECT day FROM UNNEST(GENERATE_DATE_ARRAY('2026-02-01', '2026-02-28')) day
+  SELECT CAST(day AS DATE) AS day 
+  FROM generate_series(DATE '2026-03-01', DATE '2026-03-31', INTERVAL 1 DAY) AS t(day) -- 開始日と終了日を手動で入力する
 )
 , base_timetable AS (
   -- R1航路 (AppleMaru)
@@ -175,16 +176,18 @@ WITH date_range AS (
   SELECT 'S004' AS ship_id, 'R2' AS  route_id, 'P1' AS departure_port_id, 'P3' AS arrival_port_id, '232000' AS  dep_time, '010000' AS  arr_time
 )
 SELECT 
-  FORMAT_DATE('%Y%m%d', day) || ship_id || SUBSTR(dep_time, 1, 2) AS schedule_id
+  strftime(day, '%Y%m%d') || ship_id || substring(dep_time, 1, 2) AS schedule_id
   , ship_id
   , route_id
   , departure_port_id
   , arrival_port_id
-  , PARSE_DATETIME("%Y%m%d%H%M%S", FORMAT_DATE('%Y%m%d', day) || dep_time) AS departure_time
-  , IF(arr_time < dep_time
-      , PARSE_DATETIME("%Y%m%d%H%M%S", FORMAT_DATE('%Y%m%d', DATE_ADD(day, INTERVAL 1 DAY)) ||  arr_time)
-      , PARSE_DATETIME("%Y%m%d%H%M%S", FORMAT_DATE('%Y%m%d', day) ||  arr_time)
-    ) AS arrival_time
+  , strptime(strftime(day, '%Y%m%d') || dep_time, '%Y%m%d%H%M%S') AS departure_time
+  , CASE 
+      WHEN arr_time < dep_time THEN 
+        strptime(strftime(day + INTERVAL 1 DAY, '%Y%m%d') || arr_time, '%Y%m%d%H%M%S')
+      ELSE 
+        strptime(strftime(day, '%Y%m%d') || arr_time, '%Y%m%d%H%M%S')
+    END AS arrival_time
 FROM date_range CROSS JOIN base_timetable
 ;
 
@@ -252,14 +255,21 @@ FROM
 -- 1ヶ月間で約5000件の予約データを生成
 INSERT INTO ships_raw_dev.reservations (reservation_id, reservation_name, reservation_email, reservation_date)
 WITH base_dates AS (
-  SELECT * FROM UNNEST(GENERATE_ARRAY(1, 5000)) AS id
+  SELECT i AS id FROM generate_series(1, 5000) AS t(i)
+)
+, random_data AS (
+  SELECT 
+    id
+    , DATE '2026-01-01' + INTERVAL (floor(random() * 31)) DAY AS r_date  -- 予約月（搭乗月-1か月ぐらい）
+    , uuid()::VARCHAR AS u_id
+  FROM base_dates
 )
 SELECT 
-  'R' || FORMAT_DATE('%Y%m%d', DATE_ADD('2026-01-01', INTERVAL CAST(RAND() * 30 AS INT64) DAY)) || '-' || LPAD(CAST(id AS STRING), 4, '0') AS reservation_id
-  , 'User_' || SUBSTR(GENERATE_UUID(), 1, 8) AS reservation_name
+'R' || strftime(r_date, '%Y%m%d') || '-' || lpad(id::VARCHAR, 4, '0') AS reservation_id
+  , 'User_' || substring(u_id, 1, 8) AS reservation_name
   , 'user_' || id || '@example.com' AS reservation_email
-  , DATE_ADD('2026-01-01', INTERVAL CAST(RAND() * 30 AS INT64) DAY) AS reservation_date
-FROM base_dates
+  , r_date AS reservation_date
+FROM random_data
 ;
 
 /* 予約明細情報 (reservation_details) の生成 */
@@ -273,7 +283,7 @@ WITH random_reservations AS (
     , f.fare
     , f.is_unit_rate
     , src.capacity_per_room
-    , CAST(RAND() * 5 AS INT64) + 1 AS num_bookings -- 1つのスケジュール・クラスにつき最大5件の予約を製紙絵
+    , CAST(floor(random() * 5) AS INT) + 1 AS num_bookings -- 1つのスケジュール・クラスにつき最大5件の予約を生成
   FROM 
     ships_raw_dev.schedules s
     CROSS JOIN ships_raw_dev.ship_room_classes src
@@ -284,28 +294,34 @@ WITH random_reservations AS (
 )
 , expanded_bookings AS (
   SELECT 
-    *
-    , GENERATE_UUID() as uuid
-  FROM random_reservations, UNNEST(GENERATE_ARRAY(1, num_bookings)) AS sub_id
+    r.*
+    , uuid() AS u_id
+  FROM
+    random_reservations r
+    , generate_series(1, 5) AS t(sub_id) -- 最大値5で固定し、後でnum_bookingsでフィルタ
+  WHERE t.sub_id <= r.num_bookings
 )
 , numbered_bookings AS (
   SELECT 
     *
-    , ROW_NUMBER() OVER(PARTITION BY schedule_id, room_class_id ORDER BY uuid) as booking_rank
+    , ROW_NUMBER() OVER(PARTITION BY schedule_id, room_class_id ORDER BY u_id) as booking_rank
   FROM expanded_bookings
 )
 SELECT 
   res.reservation_id
-  , LPAD(CAST(ROW_NUMBER() OVER(PARTITION BY res.reservation_id) AS STRING), 3, '0') AS detail_id
+  , LPAD((ROW_NUMBER() OVER(PARTITION BY res.reservation_id))::VARCHAR, 3, '0') AS detail_id
   , nb.schedule_id
-  , 'P-' || SUBSTR(nb.uuid, 1, 8) AS passenger_id
+  , 'P-' || substring(nb.u_id::VARCHAR, 1, 8) AS passenger_id
   , 'ADULT' AS passenger_type
   , nb.ship_id
   , nb.room_class_id
   , nb.fare AS applied_fare
 FROM numbered_bookings nb
-INNER JOIN (SELECT reservation_id, ROW_NUMBER() OVER() as rn FROM ships_raw_dev.reservations) res
-  ON MOD(ABS(FARM_FINGERPRINT(nb.uuid)), 5000) = res.rn - 1
+INNER JOIN (
+  SELECT reservation_id, ROW_NUMBER() OVER() as rn 
+  FROM ships_raw_dev.reservations
+) res
+  ON (abs(hash(nb.u_id::VARCHAR)) % 5000) = res.rn - 1
 INNER JOIN ships_raw_dev.inventories i 
   ON nb.schedule_id = i.schedule_id AND nb.room_class_id = i.room_class_id
 WHERE 

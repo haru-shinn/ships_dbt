@@ -12,6 +12,7 @@ services:
       - duckdb_extensions:/root/.duckdb
     environment:
       - DBT_PROFILES_DIR=/app/dbt_models
+      - DAGSTER_HOME=/app/dagster_pj/dagster_home
     working_dir: /app/dbt_models
     tty: true
     stdin_open: true
